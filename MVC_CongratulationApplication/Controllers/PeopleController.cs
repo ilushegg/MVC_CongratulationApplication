@@ -20,14 +20,12 @@ namespace MVC_CongratulationApplication.Controllers
             _webHostEnvironment = webHostEnvironment;
         }
 
-        // GET: People
         public async Task<IActionResult> Index()
         {
             var dataContext = _context.People.Include(p => p.User);
             return View(await dataContext.ToListAsync());
         }
 
-        // GET: People/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.People == null)
@@ -86,7 +84,6 @@ namespace MVC_CongratulationApplication.Controllers
                       + Path.GetExtension(fileName);
         }
 
-        // GET: People/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.People == null)
