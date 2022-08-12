@@ -5,19 +5,13 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using MVC_CongratulationApplication.Data;
+
 using MVC_CongratulationApplication.Models;
 
 namespace MVC_CongratulationApplication.Controllers
 {
     public class UsersController : Controller
     {
-        private readonly DataContext _context;
-
-        public UsersController(DataContext context)
-        {
-            _context = context;
-        }
-
+        
     }
 }

@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace MVC_CongratulationApplication.Migrations
+namespace MVC_CongratulationApplication.DAL.Migrations
 {
     public partial class InitialCreate : Migration
     {
@@ -35,7 +35,7 @@ namespace MVC_CongratulationApplication.Migrations
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Birthday = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Filename = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    UserId = table.Column<int>(type: "int", nullable: false)
+                    UserId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -44,8 +44,7 @@ namespace MVC_CongratulationApplication.Migrations
                         name: "FK_People_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateIndex(

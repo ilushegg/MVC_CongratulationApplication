@@ -1,4 +1,4 @@
-﻿namespace MVC_CongratulationApplication.Models
+﻿namespace MVC_CongratulationApplication.Domain.Entity
 {
     public class User
     {

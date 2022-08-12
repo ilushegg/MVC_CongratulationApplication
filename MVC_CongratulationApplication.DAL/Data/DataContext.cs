@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using MVC_CongratulationApplication.Models;
+using MVC_CongratulationApplication.Domain.Entity;
 
-namespace MVC_CongratulationApplication.Data
+namespace MVC_CongratulationApplication.DAL.Data
 {
     public class DataContext : DbContext
     {
