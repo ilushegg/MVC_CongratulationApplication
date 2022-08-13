@@ -85,6 +85,7 @@ namespace MVC_CongratulationApplication.Service.Implementation
                     return baseResponse;
                 }
                 baseResponse.Data = person;
+                baseResponse.StatusCode = StatusCode.OK;
                 return baseResponse;
             }
             catch (Exception ex)
@@ -115,7 +116,7 @@ namespace MVC_CongratulationApplication.Service.Implementation
                     var filePath = Path.Combine(uploads, uniqueFileName);
 
                     file.CopyTo(new FileStream(filePath, FileMode.Create));
-                    person.Filename = filePath;
+                    person.Filename = uniqueFileName;
                 }
 
                 await _personRepository.Create(person);
@@ -153,6 +154,7 @@ namespace MVC_CongratulationApplication.Service.Implementation
                 person.Birthday = model.Birthday;
 
                 await _personRepository.Edit(person);
+                baseResponse.StatusCode = StatusCode.OK;
                 return baseResponse;
 
 
@@ -180,6 +182,7 @@ namespace MVC_CongratulationApplication.Service.Implementation
                     return baseResponse;
                 }
                 await _personRepository.Delete(person);
+                baseResponse.StatusCode = StatusCode.OK;
                 return baseResponse;
             }
             catch(Exception ex)

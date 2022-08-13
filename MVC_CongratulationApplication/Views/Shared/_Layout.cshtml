@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - MVC_CongratulationApplication</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    @*<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />*@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/MVC_CongratulationApplication.styles.css" asp-append-version="true" />
 </head>
@@ -30,19 +30,17 @@
             </div>
         </nav>*@
         <div class="container">
-            <nav>
-                <div class="header__inner">
-                    <ul class="header__section">
-                        <li class="header__item"><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
-                        <li class="header__item"><a asp-area="" asp-controller="People" asp-action="Index">People</a></li>
-                        <li class="header__item"><a asp-area="" asp-controller="People" asp-action="Create">Create</a></li>
+                <div class="navbar">
+                    <ul class="navbar_section">
+                        <li class="navbar_item"><a class="navbar_hl" asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
+                        <li class="navbar_item"><a class="navbar_hl" asp-area="" asp-controller="People" asp-action="Index">People</a></li>
+                        <li class="navbar_item"><a class="navbar_hl" asp-area="" asp-controller="People" asp-action="Create">Create</a></li>
                         
                     </ul>
-                    <ul class="header__section">
-                        <li class="header__item"><a href="~/Home/Settings" class="navbar-brand">Настройки</a></li>
+                    <ul class="navbar_section">
+                        <li class="navbar_item"><a class="navbar_hl" href="~/Home/Settings">Настройки</a></li>
                     </ul>
                 </div>
-            </nav>
         </div>
     </header>
     <div class="container">
