@@ -6,14 +6,13 @@ using System.Threading.Tasks;
 
 namespace MVC_CongratulationApplication.Service.Interface
 {
-    public interface ISendService
+    public interface ITimedHostedService
     {
-        Task SendEmail(string emailTo, string subject, string message);
+        Task StartAsync(CancellationToken cancellationToken);
 
-        Task<string> GenerateMessage();
+        Task StopAsync(CancellationToken cancellationToken);
 
-        void CheckingAndSending(object obj);
-
+        void Dispose();
 
     }
 }

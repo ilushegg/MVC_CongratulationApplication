@@ -8,10 +8,13 @@ namespace MVC_CongratulationApplication.Service.Implementation
     public class SendService : ISendService
     {
         private readonly IConfiguration _configuration;
+        private readonly IContainer _container;
 
-        public SendService(IConfiguration configuration)
+        public SendService(IConfiguration configuration, IContainer container)
         {
             _configuration = configuration;
+            _container = container;
+            
         }
 
         public Timer timer { get; set; }
@@ -31,7 +34,7 @@ namespace MVC_CongratulationApplication.Service.Implementation
                 try
                 {
                     await client.ConnectAsync("smtp.mail.ru", 465, true);
-                    await client.AuthenticateAsync("congrats.yourfriend@bk.ru", "*******");
+                    await client.AuthenticateAsync("congrats.yourfriend@bk.ru", "*********");
                     await client.SendAsync(emailMessage);
                     await client.DisconnectAsync(true);
                 }
@@ -42,10 +45,36 @@ namespace MVC_CongratulationApplication.Service.Implementation
             }
             Console.WriteLine("Письмо отправлено");
         }
-        public void Dispose() { }
-        public void Init()
+
+        public async Task<string> GenerateMessage()
         {
-            //timer = new Timer(new TimerCallback(SendEmail), null, 0, interval);
+            var birthdayPeople = await _container.GetBirthdayPeople();
+            if(birthdayPeople.StatusCode == Domain.Enum.StatusCode.PeopleNotFound)
+            {
+                return "NotFound";
+            }
+            string message = "Не забудьте поздравить друзей!\n" +
+                "У ваших друзей намечается день рождения:\n";
+            foreach(var person in birthdayPeople.Data)
+            {
+                message += person.Name + "\t" + person.Birthday.Date + "\n";
+            }
+            message += "\n\n\nВы получили данное сообщение так как когда-то указали свой электронный адрес в приложении для поздравления друзей, знакомых, товарищей.";
+            return message;
         }
+
+        public void CheckingAndSending(object obj)
+        {
+            var response = GenerateMessage();
+            if(response.Result != "NotFound")
+            {
+                var userResponse = _container.GetUser();
+                Task send = SendEmail(userResponse.Result.Data.Email, "Поздравь друзей!", response.Result);
+            }
+
+        }
+
+
+        
     }
 }

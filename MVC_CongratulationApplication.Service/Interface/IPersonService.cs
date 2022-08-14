@@ -8,7 +8,9 @@ namespace MVC_CongratulationApplication.Service.Interface
     public interface IPersonService
     {
         Task<IBaseResponse<IEnumerable<Person>>> GetPeople();
+
         Task<IBaseResponse<IEnumerable<Person>>> GetBirthdayPeople();
+
         Task<IBaseResponse<Person>> GetPerson(int id);
 
         Task<IBaseResponse<Person>> GetPersonByName(string name);

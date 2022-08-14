@@ -10,6 +10,7 @@ namespace MVC_CongratulationApplication.Domain.Enum
     {
         OK = 200,
         InternalServerError = 500,
-        UserNotFound = 0
+        UserNotFound = 0,
+        PeopleNotFound = 100
     }
 }

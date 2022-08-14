@@ -6,6 +6,7 @@ using MVC_CongratulationApplication.Domain.ViewModel;
 using MVC_CongratulationApplication.Service.Interface;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using MVC_CongratulationApplication.DAL.Repository;
 
 namespace MVC_CongratulationApplication.Service.Implementation
 {
@@ -44,7 +45,6 @@ namespace MVC_CongratulationApplication.Service.Implementation
         {
             var baseResponse = new BaseResponse<IEnumerable<Person>>();
             var birthdayPeople = new List<Person>();
-
             try
             {
                 var people = await _personRepository.GetAll();
@@ -52,14 +52,18 @@ namespace MVC_CongratulationApplication.Service.Implementation
                 {
                     if (person.Birthday.Day > DateTime.Now.Day && person.Birthday.Day < DateTime.Now.Day + 7 && person.Birthday.Month == DateTime.Now.Month)
                     {
-
-
                         birthdayPeople.Add(person);
-
                     }
                 }
-                baseResponse.Data = birthdayPeople;
-                baseResponse.StatusCode = StatusCode.OK;
+                if (birthdayPeople != null)
+                {
+                    baseResponse.Data = people;
+                    baseResponse.StatusCode = StatusCode.OK;
+                }
+                else
+                {
+                    baseResponse.StatusCode = StatusCode.PeopleNotFound;
+                }
 
                 return baseResponse;
             }

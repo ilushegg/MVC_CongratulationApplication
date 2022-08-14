@@ -15,8 +15,8 @@ namespace MVC_CongratulationApplication.Service.Implementation
 {
     public class UserService : IUserService
     {
-        IUserRepository _userRepository;
-        ISendService _sendService;
+        private readonly IUserRepository _userRepository;
+        private readonly ISendService _sendService;
 
         public UserService(IUserRepository userRepository, ISendService sendService)
         {
