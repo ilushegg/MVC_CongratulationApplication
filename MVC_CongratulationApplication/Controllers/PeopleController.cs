@@ -38,8 +38,7 @@ namespace MVC_CongratulationApplication.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(PersonViewModel pvm, IFormFile File)
         {
-            Console.WriteLine("ENTERING");
-            var response = await _personService.CreatePerson(pvm, File, _webHostEnvironment.WebRootPath);
+            var response = await _personService.CreatePerson(pvm, File);
             if (response.StatusCode == Domain.Enum.StatusCode.OK)
             {
                 return RedirectToAction("Index");
@@ -54,7 +53,6 @@ namespace MVC_CongratulationApplication.Controllers
             
             if (response.StatusCode == Domain.Enum.StatusCode.OK)
             {
-                ViewData["Birthday"] = response.Data.Birthday;
                 return View(response.Data);
             }
             return RedirectToAction("Error");
@@ -69,7 +67,7 @@ namespace MVC_CongratulationApplication.Controllers
             var response = await _personService.EditPerson(id, pvm, file);
             if(response.StatusCode == Domain.Enum.StatusCode.OK)
             {
-                return View(response.Data);
+                return RedirectToAction("Index");
             }
             return RedirectToAction("Error");
             

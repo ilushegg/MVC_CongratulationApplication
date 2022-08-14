@@ -17,8 +17,8 @@ namespace MVC_CongratulationApplication.DAL.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ActivationCode = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    SendingTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     isAllowSending = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>

@@ -25,12 +25,6 @@ namespace MVC_CongratulationApplication.Service.Implementation
             try
             {
                 var people = await _personRepository.GetAll();
-                if(people.Count == 0)
-                {
-                    baseResponse.Description = "Найдено 0 элементов";
-                    baseResponse.StatusCode = StatusCode.OK;
-                    return baseResponse;
-                }
                 baseResponse.Data = people;
                 baseResponse.StatusCode = StatusCode.OK;
 
@@ -41,6 +35,39 @@ namespace MVC_CongratulationApplication.Service.Implementation
                 return new BaseResponse<IEnumerable<Person>>()
                 {
                     Description = $"[GetPeople] : {ex.Message}",
+                    StatusCode = StatusCode.InternalServerError
+                };
+            }
+        }
+
+        public async Task<IBaseResponse<IEnumerable<Person>>> GetBirthdayPeople()
+        {
+            var baseResponse = new BaseResponse<IEnumerable<Person>>();
+            var birthdayPeople = new List<Person>();
+
+            try
+            {
+                var people = await _personRepository.GetAll();
+                foreach (var person in people)
+                {
+                    if (person.Birthday.Day > DateTime.Now.Day && person.Birthday.Day < DateTime.Now.Day + 7 && person.Birthday.Month == DateTime.Now.Month)
+                    {
+
+
+                        birthdayPeople.Add(person);
+
+                    }
+                }
+                baseResponse.Data = birthdayPeople;
+                baseResponse.StatusCode = StatusCode.OK;
+
+                return baseResponse;
+            }
+            catch (Exception ex)
+            {
+                return new BaseResponse<IEnumerable<Person>>()
+                {
+                    Description = $"[GetBirthdayPeople] : {ex.Message}",
                     StatusCode = StatusCode.InternalServerError
                 };
             }
@@ -98,10 +125,9 @@ namespace MVC_CongratulationApplication.Service.Implementation
             }
         }
 
-        public async Task<IBaseResponse<PersonViewModel>> CreatePerson(PersonViewModel model, IFormFile file, string webPath)
+        public async Task<IBaseResponse<PersonViewModel>> CreatePerson(PersonViewModel model, IFormFile file)
         {
             var baseResponse = new BaseResponse<PersonViewModel>();
-            Console.WriteLine(webPath);
             try
             {
                 var person = new Person()
@@ -112,7 +138,7 @@ namespace MVC_CongratulationApplication.Service.Implementation
                 if (file != null)
                 {
                     var uniqueFileName = GetUniqueFileName(file.FileName);
-                    var uploads = Path.Combine(webPath, "uploads");
+                    var uploads = Path.Combine(_webHostEnvironment.WebRootPath, "uploads");
                     var filePath = Path.Combine(uploads, uniqueFileName);
 
                     file.CopyTo(new FileStream(filePath, FileMode.Create));
@@ -203,6 +229,8 @@ namespace MVC_CongratulationApplication.Service.Implementation
                       + Guid.NewGuid().ToString().Substring(0, 4)
                       + Path.GetExtension(fileName);
         }
+
+        
 
         
     }

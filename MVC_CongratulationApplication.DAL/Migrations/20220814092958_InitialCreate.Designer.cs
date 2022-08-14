@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MVC_CongratulationApplication.DAL.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20220812055333_InitialCreate")]
+    [Migration("20220814092958_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -72,9 +72,8 @@ namespace MVC_CongratulationApplication.DAL.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<DateTime>("SendingTime")
+                        .HasColumnType("datetime2");
 
                     b.Property<bool>("isAllowSending")
                         .HasColumnType("bit");

@@ -1,32 +1,31 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MVC_CongratulationApplication.Models;
+using MVC_CongratulationApplication.Service.Implementation;
+using MVC_CongratulationApplication.Service.Interface;
 using System.Diagnostics;
 
 namespace MVC_CongratulationApplication.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        IPersonService _personService;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(IPersonService personService)
         {
-            _logger = logger;
+            _personService = personService;
         }
 
-        public IActionResult Index()
+
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var response = await _personService.GetBirthdayPeople();
+            if (response.StatusCode == Domain.Enum.StatusCode.OK)
+            {
+                return View(response.Data);
+            }
+            return RedirectToAction("Error");
         }
 
-        public IActionResult Privacy()
-        {
-            return View();
-        }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
     }
 }

@@ -1,0 +1,75 @@
+﻿@model MVC_CongratulationApplication.Domain.Entity.User
+
+@{
+    ViewData["Title"] = "Settings";
+    string name = "";
+    string email = "";
+    string sendingTime = "";
+    string activationCode = "";
+    bool isAllowSending = true;
+
+    @if (Model != null)
+    {
+        name = Model.Name;
+        email = Model.Email;
+        sendingTime = Model.SendingTime.ToString("HH:mm");
+        isAllowSending = Model.isAllowSending;
+        activationCode = Model.ActivationCode; 
+
+    }
+}
+
+<h1>Настройки</h1>
+
+
+<div class="row">
+    <div class="">
+        @if (activationCode != null)
+        {
+            <form asp-controller="Users" asp-action="SendCode" method="post">
+                <div>Ваш адрес электронной почты не подтвержден!</div>
+                <div>Отправить письмо на электронный адрес для подтверждения</div>
+                <input class="button" type="submit" value="Отправить" />
+            </form>
+        }
+        <form asp-action="Settings" asp-controller="Users" method="post" class="form form_person">
+            <div>Имя:</div>
+            <div>
+                <input class="form__input width" type="text" name="Name" value="@name">
+            </div>
+            <div>Ваш адрес электронной почты:</div>
+            <div>
+                <input class="form__input width" type="email" name="Email" value="@email">
+            </div>
+            <div>Время отправки напоминаний</div>
+            <div>
+                <input class="form__input width" type="time" name="SendingTime" value="@sendingTime">
+            </div>
+                
+            <div>
+                <label>
+                    @if (isAllowSending)
+                    {
+                        <input type="checkbox" name="isAllowSending" value="on" checked />
+                    }
+                    else
+                    {
+                        <input type="checkbox" name="isAllowSending" value="on" />
+                    }
+                    Разрешить отправлять напоминания
+                    <input type="hidden" name="isAllowSending" value="false" />
+                </label>
+            </div>
+            <div>
+                <input class="button block-item__btn" type="submit" value="Сохранить" />
+            </div>
+        </form>
+    }
+        
+    </div>
+</div>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
