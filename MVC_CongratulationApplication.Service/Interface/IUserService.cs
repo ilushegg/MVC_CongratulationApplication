@@ -23,5 +23,6 @@ namespace MVC_CongratulationApplication.Service.Interface
 
         Task<IBaseResponse<bool>> SendActivationCode();
 
+
     }
 }

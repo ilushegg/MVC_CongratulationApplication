@@ -20,5 +20,8 @@ namespace MVC_CongratulationApplication.Service.Interface
         Task<IBaseResponse<PersonViewModel>> EditPerson(int id, PersonViewModel model, IFormFile file);
 
         Task<IBaseResponse<bool>> DeletePerson(int id);
+
+
+
     }
 }

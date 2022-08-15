@@ -56,5 +56,6 @@ namespace MVC_CongratulationApplication.DAL.Repository
             var dataContext = _dataContext.Users;
             return dataContext.ToListAsync();
         }
+
     }
 }

@@ -8,5 +8,6 @@ namespace MVC_CongratulationApplication.DAL.Interface
 
         Task<Person> GetByName(string name);
 
+        Task<List<Person>> GetBirthdayPeople();
     }
 }

@@ -34,7 +34,7 @@ namespace MVC_CongratulationApplication.Service.Implementation
                 }
                 if (birthdayPeople != null)
                 {
-                    baseResponse.Data = people;
+                    baseResponse.Data = birthdayPeople;
                     baseResponse.StatusCode = StatusCode.OK;
                 }
                 else
@@ -66,6 +66,7 @@ namespace MVC_CongratulationApplication.Service.Implementation
                     baseResponse.StatusCode = StatusCode.UserNotFound;
                     return baseResponse;
                 }
+                Console.WriteLine("USESESESERRRRRRRRRRRRRRRRRR:       " + user.SendingTime);
                 baseResponse.Data = user;
                 baseResponse.StatusCode = StatusCode.OK;
                 return baseResponse;

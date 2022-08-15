@@ -21,6 +21,7 @@ builder.Services.AddScoped<ISendService, SendService>();
 builder.Services.AddScoped<ITimedHostedService, TimedHostedService>();
 
 builder.Services.AddHostedService<TimedHostedService>();
+
 var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

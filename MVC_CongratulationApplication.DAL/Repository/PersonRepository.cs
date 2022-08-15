@@ -46,6 +46,12 @@ namespace MVC_CongratulationApplication.DAL.Repository
             return dataContext.ToListAsync();
         }
 
+        public Task<List<Person>> GetBirthdayPeople()
+        {
+            var dataContext = _dataContext.People.Where(p => p.Birthday.Month == DateTime.Now.Month && p.Birthday.Day >= DateTime.Now.Day && p.Birthday.Day <= DateTime.Now.Day + 7);
+            return dataContext.ToListAsync();
+        }
+
         public async Task<Person> GetByName(string name)
         {
             return await _dataContext.People.FirstOrDefaultAsync(x => x.Name == name);

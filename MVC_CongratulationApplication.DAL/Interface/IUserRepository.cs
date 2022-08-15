@@ -8,5 +8,6 @@ namespace MVC_CongratulationApplication.DAL.Interface
 
         Task<User> GetFirst();
 
+
     }
 }

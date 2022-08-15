@@ -14,11 +14,15 @@ namespace MVC_CongratulationApplication.Service.Implementation
     {
         private readonly IPersonRepository _personRepository;
         private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly IUserService _userService;
+        private readonly ISendService _sendService;
 
-        public PersonService(IPersonRepository personRepository, IWebHostEnvironment webHostEnvironment)
+        public PersonService(IPersonRepository personRepository, IWebHostEnvironment webHostEnvironment, IUserService userService, ISendService sendService)
         {
             _personRepository = personRepository;
             _webHostEnvironment = webHostEnvironment;
+            _userService = userService;
+            _sendService = sendService; 
         }
         public async Task<IBaseResponse<IEnumerable<Person>>> GetPeople()
         {
@@ -44,20 +48,13 @@ namespace MVC_CongratulationApplication.Service.Implementation
         public async Task<IBaseResponse<IEnumerable<Person>>> GetBirthdayPeople()
         {
             var baseResponse = new BaseResponse<IEnumerable<Person>>();
-            var birthdayPeople = new List<Person>();
+
             try
             {
-                var people = await _personRepository.GetAll();
-                foreach (var person in people)
-                {
-                    if (person.Birthday.Day > DateTime.Now.Day && person.Birthday.Day < DateTime.Now.Day + 7 && person.Birthday.Month == DateTime.Now.Month)
-                    {
-                        birthdayPeople.Add(person);
-                    }
-                }
+                var birthdayPeople = await _personRepository.GetBirthdayPeople();
                 if (birthdayPeople != null)
                 {
-                    baseResponse.Data = people;
+                    baseResponse.Data = birthdayPeople;
                     baseResponse.StatusCode = StatusCode.OK;
                 }
                 else
@@ -234,8 +231,8 @@ namespace MVC_CongratulationApplication.Service.Implementation
                       + Path.GetExtension(fileName);
         }
 
-        
 
-        
+
+
     }
 }

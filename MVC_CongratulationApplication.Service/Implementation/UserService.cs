@@ -1,27 +1,21 @@
 ﻿using MVC_CongratulationApplication.DAL.Interface;
-using MVC_CongratulationApplication.DAL.Repository;
 using MVC_CongratulationApplication.Domain.Entity;
 using MVC_CongratulationApplication.Domain.Enum;
 using MVC_CongratulationApplication.Domain.Response;
 using MVC_CongratulationApplication.Domain.ViewModel;
 using MVC_CongratulationApplication.Service.Interface;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MVC_CongratulationApplication.Service.Implementation
 {
     public class UserService : IUserService
     {
         private readonly IUserRepository _userRepository;
-        private readonly ISendService _sendService;
+        private readonly ITimedHostedService _timedHostedService;
 
-        public UserService(IUserRepository userRepository, ISendService sendService)
+        public UserService(IUserRepository userRepository, ITimedHostedService timedHostedService)
         {
             _userRepository = userRepository;
-            _sendService = sendService;
+            _timedHostedService = timedHostedService;
         }
 
 
@@ -141,7 +135,6 @@ namespace MVC_CongratulationApplication.Service.Implementation
                     user.Email = model.Email;
                     user.SendingTime = model.SendingTime;
                     user.isAllowSending = allow;
-
                     await _userRepository.Edit(user);
                     baseResponse.StatusCode = StatusCode.OK;
                     return baseResponse;
@@ -210,7 +203,11 @@ namespace MVC_CongratulationApplication.Service.Implementation
                         "Пожалуйста, подтвердите свой электронный адрес перейдя по ссылке: {0}",
                 user.Name, link
             );
-            _sendService.SendEmail(user.Email, "Activation Code", message);
+            _timedHostedService.Initialize(user.Email, message, "Активация");
+            _timedHostedService.SendEmail();
+            _timedHostedService.Dispose();
+            
         }
+
     }
 }

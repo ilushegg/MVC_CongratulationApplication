@@ -8,11 +8,13 @@ namespace MVC_CongratulationApplication.Service.Interface
 {
     public interface ISendService
     {
-        Task SendEmail(string emailTo, string subject, string message);
-
-        Task<string> GenerateMessage();
-
+        Task Initialize(string Email, string Subject, string Message, DateTime Time);
+        Task Initialize(string Email, string Subject, string Message);
+        Task Initialize(string Email, DateTime Time);
+        Task Initialize(string Message);
+        Task SendEmail();
         void CheckingAndSending(object obj);
+
 
 
     }

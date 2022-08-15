@@ -11,5 +11,6 @@ namespace MVC_CongratulationApplication.DAL.Data
         {
             
         }
+
     }
 }
