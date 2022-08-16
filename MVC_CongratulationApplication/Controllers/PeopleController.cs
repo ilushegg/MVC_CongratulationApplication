@@ -1,6 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
+using MVC_CongratulationApplication.Domain.Entity;
 using MVC_CongratulationApplication.Domain.ViewModel;
+using MVC_CongratulationApplication.Models;
 using MVC_CongratulationApplication.Service.Interface;
+
 
 namespace MVC_CongratulationApplication.Controllers
 {
@@ -16,13 +21,24 @@ namespace MVC_CongratulationApplication.Controllers
             _webHostEnvironment = webHostEnvironment;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int page = 1)
         {
             var response = await _personService.GetPeople();
+            int elementCount = 5;
+            var count = response.Data.Count();
+            var items = response.Data.Skip((page - 1) * elementCount).Take(elementCount);
+
+            PageViewModel pageViewModel = new PageViewModel(count, page, elementCount);
+            IndexViewModel viewModel = new IndexViewModel
+            {
+                PageViewModel = pageViewModel,
+                People = items
+            };
+            return View(viewModel);
             if (response.StatusCode == Domain.Enum.StatusCode.OK)
             {
                 ViewData["Title"] = "Друзья";
-                return View("~/Views/Shared/Index.cshtml", response.Data);
+                return View("~/Views/Shared/Index.cshtml", viewModel);
             }
             return View("~/Views/Shared/Error.cshtml", response.Description);
         }

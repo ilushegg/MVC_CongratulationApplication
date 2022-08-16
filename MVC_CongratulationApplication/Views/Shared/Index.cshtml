@@ -1,11 +1,11 @@
-﻿@model IEnumerable<MVC_CongratulationApplication.Domain.Entity.Person>
+﻿@model IndexViewModel
 
 
 <div class="mt">
     <h2 class="title">@ViewBag.Text</h2>
     <table class="table">
         <tbody>
-            @foreach (var item in Model) {
+            @foreach (var item in Model.People) {
                 <tr>
                     <td>
                         @if (item.Filename != null)
@@ -17,7 +17,7 @@
                             <img class="avatar" src="~/no_image.png" alt="No avatar">
                         }
                     </td>
-                    <td>
+                    <td class="table_name">
                         @item.Name
                     </td>
                     <td class="table_col_text">
@@ -33,4 +33,15 @@
             }
         </tbody>
     </table>
+    <div class="pagination center">
+        @if (Model.PageViewModel.HasNextPage)
+        {
+            <a class="button" asp-action="Index" asp-route-page="@(Model.PageViewModel.PageNumber + 1)">Вперед</a>
+        }
+        @if (Model.PageViewModel.HasPreviousPage)
+        {
+            <a class="button" asp-action="Index" asp-route-page="@(Model.PageViewModel.PageNumber - 1)">Назад</a>
+        }
+    </div>
+    
 </div>

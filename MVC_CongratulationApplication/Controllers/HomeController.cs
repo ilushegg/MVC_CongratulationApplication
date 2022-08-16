@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using MVC_CongratulationApplication.Models;
 using MVC_CongratulationApplication.Service.Interface;
 
 namespace MVC_CongratulationApplication.Controllers
@@ -13,14 +15,24 @@ namespace MVC_CongratulationApplication.Controllers
         }
 
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int page = 1)
         {
             var response = await _personService.GetBirthdayPeople();
+            int elementCount = 5;
+            var count = response.Data.Count();
+            var items = response.Data.Skip((page - 1) * elementCount).Take(elementCount);
+
+            PageViewModel pageViewModel = new PageViewModel(count, page, elementCount);
+            IndexViewModel viewModel = new IndexViewModel
+            {
+                PageViewModel = pageViewModel,
+                People = items
+            };
+            return View(viewModel);
             if (response.StatusCode == Domain.Enum.StatusCode.OK)
             {
-                ViewData["Title"] = "Главная";
-                ViewBag.Text = "У  ваших друзей скоро день рождения";
-                return View("~/Views/Shared/Index.cshtml", response.Data);
+                ViewData["Title"] = "Друзья";
+                return View("~/Views/Shared/Index.cshtml", viewModel);
             }
             return View("~/Views/Shared/Error.cshtml", response.Description);
         }
