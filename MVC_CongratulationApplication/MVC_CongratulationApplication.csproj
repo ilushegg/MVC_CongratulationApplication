@@ -7,10 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\uploads\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\MVC_CongratulationApplication.DAL\MVC_CongratulationApplication.DAL.csproj" />
     <ProjectReference Include="..\MVC_CongratulationApplication.Service\MVC_CongratulationApplication.Service.csproj" />
   </ItemGroup>

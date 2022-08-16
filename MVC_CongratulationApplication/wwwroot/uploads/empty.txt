@@ -1,0 +1,6 @@
+﻿namespace MVC_CongratulationApplication.wwwroot.uploads
+{
+    public class empty
+    {
+    }
+}
