@@ -1,42 +1,34 @@
 ﻿@model MVC_CongratulationApplication.Domain.Entity.Person
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Добавить";
 }
 
-<h1>Create</h1>
 
-<h4>Person</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create" asp-controller="People" method="post" enctype="multipart/form-data">
-            <div  class="text-danger"></div>
-            <div class="form-group">
-                <label>Name</label>
-                <input name="Name" class="form-control" />
-                @*<span asp-validation-for="Name" class="text-danger"></span>*@
-            </div>
-            <div class="form-group">
-                <label>Birthday</label>
-                <input type="date" name="Birthday" class="form-control" />
-                @*<span asp-validation-for="Birthday" class="text-danger"></span>*@
-            </div>
-            <div class="form-group">
-                <label>File</label>
-                <input type="file" name="File" class="form-control" />
-                @*<span asp-validation-for="Filename" class="text-danger"></span>*@
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
+<div class="mt">
+    <form class="form" asp-action="Create" asp-controller="People" method="post" enctype="multipart/form-data">
+        <div class="form_group center">
+            <img class="avatar user_avatar" id="avatarHover" src="~/no_image.png" onclick='files.click()' alt="">
+        </div>
+        <p>
+            <input accept="image/*" onchange="loadFile(event)" type="file" name="File" id="files" hidden />
+        </p>
+        <div class="form_group">
+            <label>Имя</label>
+            <input class="form_input" asp-for="Name" name="Name" />
+            <span asp-validation-for="Name" class="text_danger"></span>
+        </div>
+        <div class="form_group">
+            <label>День рождения</label>
+            <input class="form_input" asp-for="Birthday" type="date" name="Birthday" />
+            <span asp-validation-for="Birthday" class="text_danger"></span>
+        </div>
+        <div class="form_group">
+            <input class="button button_large" type="submit" value="Добавить" />
+        </div>
+    </form>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

@@ -1,8 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using MVC_CongratulationApplication.Models;
-using MVC_CongratulationApplication.Service.Implementation;
 using MVC_CongratulationApplication.Service.Interface;
-using System.Diagnostics;
 
 namespace MVC_CongratulationApplication.Controllers
 {
@@ -21,10 +18,14 @@ namespace MVC_CongratulationApplication.Controllers
             var response = await _personService.GetBirthdayPeople();
             if (response.StatusCode == Domain.Enum.StatusCode.OK)
             {
-                return View(response.Data);
+                ViewData["Title"] = "Главная";
+                ViewBag.Text = "У  ваших друзей скоро день рождения";
+                return View("~/Views/Shared/Index.cshtml", response.Data);
             }
-            return RedirectToAction("Error");
+            return View("~/Views/Shared/Error.cshtml", response.Description);
         }
+
+
 
 
     }

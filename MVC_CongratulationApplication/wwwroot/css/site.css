@@ -8,18 +8,16 @@ body {
     font-family: 'Lucida Sans Unicode';
 }
 
-.main_title {
-    text-transform: uppercase;
-    font-size: 20px;
-    letter-spacing: 2px;
-    font-weight: 600;
-    margin: 50px;
+ul,
+li {
+    list-style: none;
+    margin: 0;
+    padding: 0;
 }
 
 .container {
     max-width: 1060px;
     margin: auto;
-    list-style: none;
 }
 
 header {
@@ -45,26 +43,26 @@ header {
     font-size: 12px;
     line-height: 30px;
     transition: .3s;
-    list-style: none;
 }
 
-    .navbar_item a {
-        color: #F7EBE8;
-        text-transform: uppercase;
-        text-decoration: none;
-        padding: 15px 15px;
-    }
+.navbar_item a {
+    color: #F7EBE8;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 15px 15px;
+}
 
-    .navbar_item:hover {
-        background-color: #444140;
-        cursor: pointer;
-        color: #FFF;
-    }
+.navbar_item:hover {
+    background-color: #444140;
+    cursor: pointer;
+    color: #FFF;
+}
 
 .table {
     max-width: 900px;
     width: 100%;
     margin: auto;
+    padding: 0px 15px;
 }
 
 table td {
@@ -86,13 +84,6 @@ table td {
     border-radius: 50%;
 }
 
-.persons {
-    margin-top: 50px;
-}
-
-#logout {
-    visibility: hidden;
-}
 
 .button {
     display: inline-block;
@@ -114,189 +105,49 @@ table td {
     text-decoration: none;
 }
 
-    .button:hover {
-        background: #FFA987;
-        color: white;
-    }
-
-.mt {
-    margin-top: 50px;
+.button:hover {
+    background: #FFA987;
+    color: white;
+    cursor: pointer;
 }
 
-.form_container {
-    height: calc(100vh - 1px);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #fff;
-    transition: .5s;
-    overflow-y: hidden;
-}
-
-    .form_container.active {
-        background-color: #413b39;
-    }
-
-.form_container-inner {
-    width: 800px;
-    height: 500px;
-    padding: 40px 0;
-    position: relative;
-}
-
-.block {
-    height: 100%;
-    box-shadow: 0 5px 45px rgba(0, 0, 0, 0.2);
-    background-color: rgba(168, 135, 135, 0.3);
-    display: flex;
-    align-items: center;
-}
-
-.block__item {
-    width: 50%;
-}
-
-.block-item {
-    text-align: center;
-}
-
-.block-item__title {
-    font-size: 14px;
-    font-weight: 600;
-    margin-bottom: 10px;
-    color: #fff;
-    text-transform: uppercase;
-    transition: .5s;
-    letter-spacing: 2px;
-}
-
-.block-item__btn {
+.button_large {
     width: 120px;
     height: 35px;
     margin: 7px 15px 7px 0;
 }
 
-.form-box {
-    height: 100%;
-    width: 50%;
-    background-color: #fff;
-    box-shadow: 0 5px 45px rgba(0, 0, 0, 0.2);
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 1000;
-    transition: .5s ease-in-out;
-    display: flex;
-    align-items: center;
-    overflow: hidden;
+.mt {
+    margin-top: 50px;
 }
 
-    .form-box.active {
-        left: 50%;
-    }
-
-.signup-title {
-    color: #302f2f;
+.title{
+    padding: 0 15px;
 }
 
 .form {
+    max-width: 1100px;
     width: 100%;
-    padding: 50px;
     font-size: 16px;
     position: absolute;
     transition: .5s;
+    padding: 0px 15px;
 }
 
-.form_signin {
-    left: 0;
-    transition-delay: .25s;
+.form_group{
+    margin: 15px 0;
 }
 
-.form_signup {
-    left: 100%;
-    transition-delay: 0s;
-}
-
-.form-box.active .form_signin {
-    left: -100%;
-    transition-delay: 0s;
-}
-
-.form-box.active .form_signup {
-    left: 0;
-    transition-delay: .25s;
-}
-
-.form__title {
-    font-size: 20px;
-    font-weight: 600;
-    text-transform: uppercase;
-}
-
-.form__input {
+.form_input {
     width: 100%;
     padding: 10px;
     border: solid 1px #c9bdbd;
     font-size: 12px;
 }
 
-.form__text {
+.text_danger {
+    color: #e04f4f;
     font-size: 12px;
-    color: #4b4949;
-}
-
-.form__forgot {
-    font-size: 12px;
-    color: #4b4949;
-}
-
-
-
-@media(max-width: 992px) {
-    .form_container-inner {
-        max-width: 400px;
-        height: 650px;
-        padding: 0;
-        margin: 0 20px;
-    }
-
-    .block {
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-    }
-
-    .block-item {
-        width: 100%;
-        padding: 30px 0;
-    }
-
-    .form-box {
-        width: 100%;
-        height: 500px;
-        box-shadow: none;
-        top: 0;
-    }
-
-        .form-box.active {
-            top: 150px;
-            left: 0;
-        }
-}
-
-.form_person {
-    max-width: 1100px;
-    padding: 30px 30px;
-}
-
-    .form_person div {
-        padding: 10px 0px;
-    }
-
-.center {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
 }
 
 .user_avatar {
@@ -304,25 +155,87 @@ table td {
     width: 300px;
 }
 
-    .user_avatar:hover {
-        background: url('/img/no_image.png');
-        cursor: pointer;
-        opacity: 0.6;
+.user_avatar:hover {
+    background: url('/img/no_image.png');
+    cursor: pointer;
+    opacity: 0.6;
+}
+
+.error_box {
+    height: 100vh;
+    display: grid;
+}
+
+.error {
+    margin: auto;
+}
+
+.error_number{
+    text-align: center;
+    font-size: 100px;
+}
+
+
+.error_message {
+    text-align: center;
+    font-size: 32px;
+}
+
+.error_message a {
+    text-decoration: none;
+}
+
+.error_message a:hover {
+    text-decoration: underline;
+}
+
+.center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+@media (max-width: 600px) {
+
+    .navbar_item {
+        font-size: 10px;
     }
 
-.user_navbar {
-    height: 40px;
-    width: 40px;
-}
+    .table {
+        max-width: 600px;
+        width: 100%;
+        margin: auto;
+        font-size: 12px;
+    }
 
-.navbar_avatar {
-    padding: 0px 15px;
-    line-height: 0;
-    list-style: none;
-}
 
-.width {
-    width: 300px;
+    table td {
+        padding: 12px 5px;
+        margin: auto auto;
+        text-align: center;
+    }
+
+    .avatar {
+        height: 75px;
+        width: 75px;
+    }
+
+    .user_avatar {
+        height: 150px;
+        width: 150px;
+    }
+
+    .button {
+        width: 75px;
+        height: 25px;
+        margin: 7px 10px;
+        font-size: 8px;
+    }
+
+    .button_large {
+        width: 120px;
+        height: 35px;
+        margin: 7px 15px 7px 0;
+    }
 }
 
 

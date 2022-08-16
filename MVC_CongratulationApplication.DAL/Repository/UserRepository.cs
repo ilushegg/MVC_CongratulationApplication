@@ -2,11 +2,6 @@
 using MVC_CongratulationApplication.DAL.Data;
 using MVC_CongratulationApplication.DAL.Interface;
 using MVC_CongratulationApplication.Domain.Entity;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MVC_CongratulationApplication.DAL.Repository
 {

@@ -1,20 +1,10 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using MailKit.Net.Smtp;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using MimeKit;
-using MVC_CongratulationApplication.DAL.Interface;
-using MVC_CongratulationApplication.DAL.Repository;
-using MVC_CongratulationApplication.Service.Interface;
-using MailKit.Net.Smtp;
-
-using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 using MVC_CongratulationApplication.DAL.Data;
+using MVC_CongratulationApplication.Service.Interface;
 
 namespace MVC_CongratulationApplication.Service.Implementation
 {
@@ -66,7 +56,7 @@ namespace MVC_CongratulationApplication.Service.Implementation
 
                 string message = "";
                 var birthdayPeople = dbContext.People.Where(p => p.Birthday.Month == DateTime.Now.Month && p.Birthday.Day > DateTime.Now.Day && p.Birthday.Day < DateTime.Now.Day + 7);
-               
+
                 if (birthdayPeople.ToList() != null)
                 {
                     message = "Не забудьте поздравить друзей!\n\n" +
@@ -76,62 +66,66 @@ namespace MVC_CongratulationApplication.Service.Implementation
                 {
                     message = "NotFound";
                 }
-                
+
                 foreach (var person in birthdayPeople)
                 {
                     message += "\t" + person.Name + "\t" + person.Birthday.Date.ToString("dd.MM.yyyy") + "\n";
                 }
                 message += "\n\n\nВы получили данное сообщение так как когда-то указали свой электронный адрес в приложении для поздравления друзей, знакомых, товарищей.";
-                var user =  dbContext.Users.FirstOrDefault();
-                Message = message;
-                Email = user.Email;
-                Time = user.SendingTime;
-                IsAllow = user.isAllowSending;
-                Send = false;
-
-                await dbContext.SaveChangesAsync();
+                var user = dbContext.Users.FirstOrDefault();
+                if (user != null)
+                {
+                    Message = message;
+                    Email = user.Email;
+                    Time = user.SendingTime;
+                    IsAllow = user.isAllowSending;
+                    Send = false;
+                }
             }
-           
+
             Subject = "Поздравь друзей!";
         }
-        
+
         public void Initialize(string Email, string Message, string Subject)
         {
             this.Email = Email;
             this.Message = Message;
             this.Subject = Subject;
         }
-     
+
 
         public Timer timer { get; set; }
         public async Task SendEmail()
         {
-            var emailMessage = new MimeMessage();
+            if (Email != null)
+            {
+                var emailMessage = new MimeMessage();
 
-            emailMessage.From.Add(new MailboxAddress("Congratulation Application", "congrats.yourfriend@bk.ru"));
-            emailMessage.To.Add(new MailboxAddress("", Email));
-            emailMessage.Subject = Subject;
-            emailMessage.Body = new TextPart(MimeKit.Text.TextFormat.RichText)
-            {
-                Text = Message
-            };
-            using (var client = new SmtpClient())
-            {
-                try
+                emailMessage.From.Add(new MailboxAddress("Congratulation Application", _configuration["Mail:Email"]));
+                emailMessage.To.Add(new MailboxAddress("", Email));
+                emailMessage.Subject = Subject;
+                emailMessage.Body = new TextPart(MimeKit.Text.TextFormat.RichText)
                 {
-                    await client.ConnectAsync("smtp.mail.ru", 465, true);
-                    await client.AuthenticateAsync("congrats.yourfriend@bk.ru", "*********");
-                    await client.SendAsync(emailMessage);
-                    await client.DisconnectAsync(true);
-                    Send = true;
-                    Console.WriteLine("Письмо отправлено");
-                }
-                catch (Exception ex)
+                    Text = Message
+                };
+                using (var client = new SmtpClient())
                 {
-                    Console.WriteLine(ex.Message);
+                    try
+                    {
+                        await client.ConnectAsync("smtp.mail.ru", 465, true);
+                        await client.AuthenticateAsync(_configuration["Mail:Email"], _configuration["Mail:Password"]);
+                        await client.SendAsync(emailMessage);
+                        await client.DisconnectAsync(true);
+                        Send = true;
+                        Console.WriteLine("Письмо отправлено");
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                    }
                 }
             }
-            
+
         }
 
         public void CheckingAndSending(object obj)
@@ -139,12 +133,10 @@ namespace MVC_CongratulationApplication.Service.Implementation
             Initialize();
             if (Message != "NotFound")
             {
-                Console.WriteLine("/////////////////????????????????????????????????:      " + Time);
                 if (!Send && IsAllow && Time.Hour == DateTime.Now.Hour && Time.Minute == DateTime.Now.Minute)
                 {
                     Subject = "Поздравь друзей!";
                     Task send = SendEmail();
-                    //_timer.Change(86400000, 60000);
                 }
             }
 

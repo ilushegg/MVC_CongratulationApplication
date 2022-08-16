@@ -1,0 +1,36 @@
+﻿@model IEnumerable<MVC_CongratulationApplication.Domain.Entity.Person>
+
+
+<div class="mt">
+    <h2 class="title">@ViewBag.Text</h2>
+    <table class="table">
+        <tbody>
+            @foreach (var item in Model) {
+                <tr>
+                    <td>
+                        @if (item.Filename != null)
+                        {
+                            <img class="avatar" src="~/uploads/@item.Filename" alt="User avatar">
+                        }
+                        else
+                        {
+                            <img class="avatar" src="~/no_image.png" alt="No avatar">
+                        }
+                    </td>
+                    <td>
+                        @item.Name
+                    </td>
+                    <td class="table_col_text">
+                        @item.Birthday.Day @item.Birthday.ToString("MMMM") @item.Birthday.Year
+                    </td>
+                    <td>
+                        <a class="button" asp-action="Edit" asp-route-id="@item.Id">Edit</a> 
+                        <form asp-controller="People" asp-action="Delete" method="post" asp-route-id="@item.Id">
+                            <input class="button" type="submit" value="Delete" />
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

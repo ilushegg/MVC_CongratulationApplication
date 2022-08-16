@@ -1,9 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using MVC_CongratulationApplication.Domain.Entity;
-using MVC_CongratulationApplication.Domain.Response;
 using MVC_CongratulationApplication.Domain.ViewModel;
 using MVC_CongratulationApplication.Service.Interface;
-using System;
 
 namespace MVC_CongratulationApplication.Controllers
 {
@@ -24,9 +21,10 @@ namespace MVC_CongratulationApplication.Controllers
             var response = await _personService.GetPeople();
             if (response.StatusCode == Domain.Enum.StatusCode.OK)
             {
-                return View(response.Data);
+                ViewData["Title"] = "Друзья";
+                return View("~/Views/Shared/Index.cshtml", response.Data);
             }
-            return RedirectToAction("Error");
+            return View("~/Views/Shared/Error.cshtml", response.Description);
         }
 
         public IActionResult Create()
@@ -43,34 +41,34 @@ namespace MVC_CongratulationApplication.Controllers
             {
                 return RedirectToAction("Index");
             }
-            return RedirectToAction("Error");
+            return View("~/Views/Shared/Error.cshtml", response.Description);
         }
-      
+
 
         public async Task<IActionResult> Edit(int id)
         {
             var response = await _personService.GetPerson(id);
-            
+
             if (response.StatusCode == Domain.Enum.StatusCode.OK)
             {
                 return View(response.Data);
             }
-            return RedirectToAction("Error");
+            return View("~/Views/Shared/Error.cshtml", response.Description);
 
         }
 
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, PersonViewModel pvm, IFormFile file)
+        public async Task<IActionResult> Edit(int id, PersonViewModel pvm, IFormFile File)
         {
-            var response = await _personService.EditPerson(id, pvm, file);
-            if(response.StatusCode == Domain.Enum.StatusCode.OK)
+            var response = await _personService.EditPerson(id, pvm, File);
+            if (response.StatusCode == Domain.Enum.StatusCode.OK)
             {
                 return RedirectToAction("Index");
             }
-            return RedirectToAction("Error");
-            
+            return View("~/Views/Shared/Error.cshtml", response.Description);
+
         }
 
         [HttpPost]
@@ -81,7 +79,7 @@ namespace MVC_CongratulationApplication.Controllers
             {
                 return RedirectToAction("Index");
             }
-            return RedirectToAction("Error");
+            return View("~/Views/Shared/Error.cshtml", response.Description);
         }
 
 

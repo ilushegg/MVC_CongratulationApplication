@@ -1,43 +1,37 @@
 ﻿@model MVC_CongratulationApplication.Domain.Entity.Person
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Редактировать";
 }
 
-<h1>Edit</h1>
-
-<h4>Person</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit" asp-controller="People" method="post" enctype="multipart/form-data">
-            <div  class="text-danger"></div>
-            <div class="form-group">
-                <label>Name</label>
-                <input class="form-control" name="Name" value="@Model.Name"/>
-                @*<span asp-validation-for="Name" class="text-danger"></span>*@
-            </div>
-            <div class="form-group">
-                <label>Birthday</label>
-                <input class="form-control" type="date" name="Birthday" value="@Model.Birthday.ToString("yyyy-MM-dd")" />
-                @*<span asp-validation-for="Birthday" class="text-danger"></span>*@
-            </div>
-            <div class="form-group">
-                <label>File</label>
-                <input type="file" name="Image" class="form-control" />
-                @*<span asp-validation-for="Filename" class="text-danger"></span>*@
-            </div>
-            <div class="form-group">
-                <input type="hidden" name="id" value="@Model.Id" />
-                <input type="submit" value="Edit" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
+<div class="mt">
+    <form class="form" asp-action="Edit" asp-controller="People" method="post" enctype="multipart/form-data">
+        <div class="form_group center">
+            @if(Model.Filename != null){
+                <img class="avatar user_avatar" id="avatarHover" src="~/uploads/@Model.Filename" onclick='files.click()' alt="">
+            }else{
+                <img class="avatar user_avatar" src="~/no_image.png" onclick='files.click()' alt="">
+            }
+        </div>
+        <p>
+            <input accept="image/*" onchange="loadFile(event)" type="file" name="File" id="files" hidden />
+        </p>
+        <div class="form_group">
+            <label>Имя</label>
+            <input class="form_input" asp-for="Name" name="Name" />
+            <span class="text_danger" asp-validation-for="Name"></span>
+        </div>
+        <div class="form_group">
+            <label>День рождения</label>
+            <input class="form_input" asp-for="Birthday" type="date" name="Birthday" />
+            <span class="text_danger" asp-validation-for="Birthday"></span>
+        </div>
+        <div class="form_group">
+            <input class="button button_large" type="submit" value="Сохранить" />
+        </div>
+    </form>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

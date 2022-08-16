@@ -1,7 +1,7 @@
-﻿using MVC_CongratulationApplication.DAL.Interface;
+﻿using Microsoft.EntityFrameworkCore;
 using MVC_CongratulationApplication.DAL.Data;
+using MVC_CongratulationApplication.DAL.Interface;
 using MVC_CongratulationApplication.Domain.Entity;
-using Microsoft.EntityFrameworkCore;
 
 namespace MVC_CongratulationApplication.DAL.Repository
 {
@@ -57,6 +57,6 @@ namespace MVC_CongratulationApplication.DAL.Repository
             return await _dataContext.People.FirstOrDefaultAsync(x => x.Name == name);
         }
 
-       
+
     }
 }

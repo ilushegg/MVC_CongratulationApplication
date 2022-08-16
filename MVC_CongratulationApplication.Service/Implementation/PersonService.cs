@@ -1,12 +1,11 @@
-﻿using MVC_CongratulationApplication.DAL.Interface;
+﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using MVC_CongratulationApplication.DAL.Interface;
 using MVC_CongratulationApplication.Domain.Entity;
 using MVC_CongratulationApplication.Domain.Enum;
 using MVC_CongratulationApplication.Domain.Response;
 using MVC_CongratulationApplication.Domain.ViewModel;
 using MVC_CongratulationApplication.Service.Interface;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using MVC_CongratulationApplication.DAL.Repository;
 
 namespace MVC_CongratulationApplication.Service.Implementation
 {
@@ -14,15 +13,13 @@ namespace MVC_CongratulationApplication.Service.Implementation
     {
         private readonly IPersonRepository _personRepository;
         private readonly IWebHostEnvironment _webHostEnvironment;
-        private readonly IUserService _userService;
-        private readonly ISendService _sendService;
 
-        public PersonService(IPersonRepository personRepository, IWebHostEnvironment webHostEnvironment, IUserService userService, ISendService sendService)
+
+        public PersonService(IPersonRepository personRepository, IWebHostEnvironment webHostEnvironment, IUserService userService)
         {
             _personRepository = personRepository;
             _webHostEnvironment = webHostEnvironment;
-            _userService = userService;
-            _sendService = sendService; 
+
         }
         public async Task<IBaseResponse<IEnumerable<Person>>> GetPeople()
         {
@@ -35,7 +32,7 @@ namespace MVC_CongratulationApplication.Service.Implementation
 
                 return baseResponse;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return new BaseResponse<IEnumerable<Person>>()
                 {
@@ -80,7 +77,7 @@ namespace MVC_CongratulationApplication.Service.Implementation
             try
             {
                 var person = await _personRepository.Get(id);
-                if(person == null)
+                if (person == null)
                 {
                     baseResponse.Description = "Пользователь не найден";
                     baseResponse.StatusCode = StatusCode.UserNotFound;
@@ -90,7 +87,7 @@ namespace MVC_CongratulationApplication.Service.Implementation
                 baseResponse.StatusCode = StatusCode.OK;
                 return baseResponse;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return new BaseResponse<Person>()
                 {
@@ -142,15 +139,17 @@ namespace MVC_CongratulationApplication.Service.Implementation
                     var uploads = Path.Combine(_webHostEnvironment.WebRootPath, "uploads");
                     var filePath = Path.Combine(uploads, uniqueFileName);
 
-                    file.CopyTo(new FileStream(filePath, FileMode.Create));
+                    var fStream = new FileStream(filePath, FileMode.Create);
+                    file.CopyTo(fStream);
+                    fStream.Dispose();
                     person.Filename = uniqueFileName;
                 }
 
                 await _personRepository.Create(person);
                 baseResponse.StatusCode = StatusCode.OK;
                 return baseResponse;
-                
-                
+
+
             }
             catch (Exception ex)
             {
@@ -173,9 +172,11 @@ namespace MVC_CongratulationApplication.Service.Implementation
                     var uniqueFileName = GetUniqueFileName(file.FileName);
                     var uploads = Path.Combine(_webHostEnvironment.WebRootPath, "uploads");
                     var filePath = Path.Combine(uploads, uniqueFileName);
+                    var fStream = new FileStream(filePath, FileMode.Create);
+                    file.CopyTo(fStream);
+                    fStream.Dispose();
 
-                    file.CopyTo(new FileStream(filePath, FileMode.Create));
-                    person.Filename = filePath;
+                    person.Filename = uniqueFileName;
                 }
                 person.Name = model.Name;
                 person.Birthday = model.Birthday;
@@ -208,11 +209,18 @@ namespace MVC_CongratulationApplication.Service.Implementation
                     baseResponse.StatusCode = StatusCode.UserNotFound;
                     return baseResponse;
                 }
+                if (person.Filename != null)
+                {
+                    var uploads = Path.Combine(_webHostEnvironment.WebRootPath, "uploads");
+                    var filePath = Path.Combine(uploads, person.Filename);
+                    File.Delete(filePath);
+                }
+
                 await _personRepository.Delete(person);
                 baseResponse.StatusCode = StatusCode.OK;
                 return baseResponse;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return new BaseResponse<bool>()
                 {

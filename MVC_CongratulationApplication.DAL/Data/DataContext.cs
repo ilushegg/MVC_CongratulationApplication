@@ -9,7 +9,7 @@ namespace MVC_CongratulationApplication.DAL.Data
         public DbSet<User> Users { get; set; }
         public DataContext(DbContextOptions<DataContext> options) : base(options)
         {
-            
+
         }
 
     }

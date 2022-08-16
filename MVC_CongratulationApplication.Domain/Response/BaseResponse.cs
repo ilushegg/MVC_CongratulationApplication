@@ -5,7 +5,7 @@ namespace MVC_CongratulationApplication.Domain.Response
 {
     public class BaseResponse<T> : IBaseResponse<T>
     {
-        public string Description { get; set; }
+        public string Description { get; set; } = "";
 
         public StatusCode StatusCode { get; set; }
 
@@ -14,6 +14,7 @@ namespace MVC_CongratulationApplication.Domain.Response
 
     public interface IBaseResponse<T>
     {
+        string Description { get; set; }
         StatusCode StatusCode { get; set; }
         T Data { get; set; }
     }

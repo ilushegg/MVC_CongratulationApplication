@@ -1,4 +1,5 @@
-﻿using MVC_CongratulationApplication.DAL.Interface;
+﻿using Microsoft.Extensions.Configuration;
+using MVC_CongratulationApplication.DAL.Interface;
 using MVC_CongratulationApplication.Domain.Entity;
 using MVC_CongratulationApplication.Domain.Enum;
 using MVC_CongratulationApplication.Domain.Response;
@@ -11,11 +12,13 @@ namespace MVC_CongratulationApplication.Service.Implementation
     {
         private readonly IUserRepository _userRepository;
         private readonly ITimedHostedService _timedHostedService;
+        private readonly IConfiguration _configuration;
 
-        public UserService(IUserRepository userRepository, ITimedHostedService timedHostedService)
+        public UserService(IUserRepository userRepository, ITimedHostedService timedHostedService, IConfiguration configuration)
         {
             _userRepository = userRepository;
             _timedHostedService = timedHostedService;
+            _configuration = configuration;
         }
 
 
@@ -89,15 +92,15 @@ namespace MVC_CongratulationApplication.Service.Implementation
                     Email = model.Email,
                     SendingTime = model.SendingTime,
                     isAllowSending = allow
-                }; 
+                };
                 user.ActivationCode = Guid.NewGuid().ToString().Substring(0, 10);
                 await _userRepository.Create(user);
-                SendConfirm(user, "http://localhost:5228/users/activate/" + user.ActivationCode);
+                SendConfirm(user, _configuration["Host:Localhost"] + "/users/activate/" + user.ActivationCode);
                 baseResponse.StatusCode = StatusCode.OK;
 
                 return baseResponse;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return new BaseResponse<UserViewModel>()
                 {
@@ -111,7 +114,7 @@ namespace MVC_CongratulationApplication.Service.Implementation
         public async Task<IBaseResponse<UserViewModel>> EditUser(UserViewModel model)
         {
             var response = await GetUser();
-            if(response.StatusCode == StatusCode.UserNotFound)
+            if (response.StatusCode == StatusCode.UserNotFound)
             {
                 return await CreateUser(model);
             }
@@ -156,10 +159,12 @@ namespace MVC_CongratulationApplication.Service.Implementation
             try
             {
                 var user = await _userRepository.GetFirst();
-
-                user.ActivationCode = null;
-                await _userRepository.Edit(user);
-                baseResponse.StatusCode = StatusCode.OK;
+                if (user != null)
+                {
+                    user.ActivationCode = null;
+                    await _userRepository.Edit(user);
+                    baseResponse.StatusCode = StatusCode.OK;
+                }
                 return baseResponse;
             }
             catch (Exception ex)
@@ -182,7 +187,7 @@ namespace MVC_CongratulationApplication.Service.Implementation
                 user.ActivationCode = Guid.NewGuid().ToString().Substring(0, 10);
                 await _userRepository.Edit(user);
                 baseResponse.StatusCode = StatusCode.OK;
-                SendConfirm(user, "http://localhost:5228/users/activate/" + user.ActivationCode);
+                SendConfirm(user, _configuration["Host:Localhost"] + "/users/activate/" + user.ActivationCode);
                 return baseResponse;
             }
             catch (Exception ex)
@@ -204,9 +209,16 @@ namespace MVC_CongratulationApplication.Service.Implementation
                 user.Name, link
             );
             _timedHostedService.Initialize(user.Email, message, "Активация");
-            _timedHostedService.SendEmail();
+            try
+            {
+                _timedHostedService.SendEmail();
+            }
+            catch (Exception ex)
+            {
+
+            }
             _timedHostedService.Dispose();
-            
+
         }
 
     }
