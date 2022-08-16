@@ -52,11 +52,5 @@ namespace MVC_CongratulationApplication.DAL.Repository
             return dataContext.ToListAsync();
         }
 
-        public async Task<Person> GetByName(string name)
-        {
-            return await _dataContext.People.FirstOrDefaultAsync(x => x.Name == name);
-        }
-
-
     }
 }

@@ -15,7 +15,7 @@ namespace MVC_CongratulationApplication.Service.Implementation
         public string Message { get; set; }
         public string Subject { get; set; }
         public DateTime Time { get; set; }
-        public bool Send = false;
+        public bool Sent;
         public bool IsAllow = true;
 
         private readonly IConfiguration _configuration;
@@ -31,7 +31,7 @@ namespace MVC_CongratulationApplication.Service.Implementation
 
         public Task StartAsync(CancellationToken cancellationToken)
         {
-            _timer = new Timer(new TimerCallback(CheckingAndSending), null, 30000, 60000);
+            _timer = new Timer(new TimerCallback(CheckingAndSending), null, 0, 60000);
             return Task.CompletedTask;
         }
 
@@ -55,35 +55,34 @@ namespace MVC_CongratulationApplication.Service.Implementation
                 var dbContext = scope.ServiceProvider.GetRequiredService<DataContext>();
 
                 string message = "";
-                var birthdayPeople = dbContext.People.Where(p => p.Birthday.Month == DateTime.Now.Month && p.Birthday.Day > DateTime.Now.Day && p.Birthday.Day < DateTime.Now.Day + 7);
-
-                if (birthdayPeople.ToList() != null)
+                var birthdayPeople = dbContext.People.Where(p => p.Birthday.Month == DateTime.Now.Month && p.Birthday.Day >= DateTime.Now.Day && p.Birthday.Day <= DateTime.Now.Day + 7);
+                if (birthdayPeople.Count() != 0)
                 {
                     message = "Не забудьте поздравить друзей!\n\n" +
                     "У ваших друзей намечается день рождения:\n\n";
+                    foreach (var person in birthdayPeople)
+                    {
+                        message += "\t" + person.Name + "\t" + person.Birthday.Date.ToString("dd.MM.yyyy") + "\n";
+                    }
+                    message += "\n\n\nВы получили данное сообщение так как когда-то указали свой электронный адрес в приложении для поздравления друзей, знакомых, товарищей.";
+                    var user = dbContext.Users.FirstOrDefault();
+                    if (user != null && user.ActivationCode == null)
+                    {
+                        Message = message;
+                        Email = user.Email;
+                        Time = user.SendingTime;
+                        IsAllow = user.isAllowSending;
+                    }
+                    else
+                    {
+                        Sent = false;
+                    }
                 }
                 else
                 {
-                    message = "NotFound";
-                }
-
-                foreach (var person in birthdayPeople)
-                {
-                    message += "\t" + person.Name + "\t" + person.Birthday.Date.ToString("dd.MM.yyyy") + "\n";
-                }
-                message += "\n\n\nВы получили данное сообщение так как когда-то указали свой электронный адрес в приложении для поздравления друзей, знакомых, товарищей.";
-                var user = dbContext.Users.FirstOrDefault();
-                if (user != null)
-                {
-                    Message = message;
-                    Email = user.Email;
-                    Time = user.SendingTime;
-                    IsAllow = user.isAllowSending;
-                    Send = false;
-                }
+                    Sent = false;
+                }     
             }
-
-            Subject = "Поздравь друзей!";
         }
 
         public void Initialize(string Email, string Message, string Subject)
@@ -116,8 +115,6 @@ namespace MVC_CongratulationApplication.Service.Implementation
                         await client.AuthenticateAsync(_configuration["Mail:Email"], _configuration["Mail:Password"]);
                         await client.SendAsync(emailMessage);
                         await client.DisconnectAsync(true);
-                        Send = true;
-                        Console.WriteLine("Письмо отправлено");
                     }
                     catch (Exception ex)
                     {
@@ -130,10 +127,10 @@ namespace MVC_CongratulationApplication.Service.Implementation
 
         public void CheckingAndSending(object obj)
         {
-            Initialize();
-            if (Message != "NotFound")
+            _ = Initialize();
+            if (!Sent)
             {
-                if (!Send && IsAllow && Time.Hour == DateTime.Now.Hour && Time.Minute == DateTime.Now.Minute)
+                if (IsAllow && Time.Hour == DateTime.Now.Hour && Time.Minute == DateTime.Now.Minute)
                 {
                     Subject = "Поздравь друзей!";
                     Task send = SendEmail();

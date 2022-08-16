@@ -6,8 +6,6 @@ namespace MVC_CongratulationApplication.Service.Interface
 {
     public interface IUserService
     {
-        Task<IBaseResponse<User>> GetUser(int id);
-
         Task<IBaseResponse<User>> GetUser();
         Task<IBaseResponse<UserViewModel>> CreateUser(UserViewModel model);
 

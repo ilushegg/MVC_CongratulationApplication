@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using MVC_CongratulationApplication.Models;
 using MVC_CongratulationApplication.Service.Interface;
 
@@ -7,16 +6,17 @@ namespace MVC_CongratulationApplication.Controllers
 {
     public class HomeController : Controller
     {
-        IPersonService _personService;
+        private readonly IPersonService _personService;
 
         public HomeController(IPersonService personService)
         {
             _personService = personService;
         }
 
-
         public async Task<IActionResult> Index(int page = 1)
         {
+            ViewData["Title"] = "Главная";
+            ViewBag.Text = "У ваших друзей скоро день рождения";
             var response = await _personService.GetBirthdayPeople();
             int elementCount = 5;
             var count = response.Data.Count();
@@ -28,17 +28,21 @@ namespace MVC_CongratulationApplication.Controllers
                 PageViewModel = pageViewModel,
                 People = items
             };
-            return View(viewModel);
-            if (response.StatusCode == Domain.Enum.StatusCode.OK)
+            if (response.StatusCode == Domain.Enum.StatusCode.OK || response.StatusCode == Domain.Enum.StatusCode.PeopleNotFound)
             {
-                ViewData["Title"] = "Друзья";
                 return View("~/Views/Shared/Index.cshtml", viewModel);
             }
             return View("~/Views/Shared/Error.cshtml", response.Description);
         }
 
+        public IActionResult Edit(int id)
+        {
+            return RedirectToAction("Edit", "People", new { id });
+        }
 
-
-
+        public IActionResult Delete(int id)
+        {
+            return RedirectToAction("Delete", "People", new { id });
+        }
     }
 }

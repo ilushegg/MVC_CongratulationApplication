@@ -7,7 +7,7 @@ namespace MVC_CongratulationApplication.Controllers
     public class UsersController : Controller
     {
 
-        IUserService _userService;
+        private readonly IUserService _userService;
 
         public UsersController(IUserService userService)
         {
@@ -27,12 +27,16 @@ namespace MVC_CongratulationApplication.Controllers
         [HttpPost]
         public async Task<IActionResult> Settings(UserViewModel uvm)
         {
-            var response = await _userService.EditUser(uvm);
-            if (response.StatusCode == Domain.Enum.StatusCode.OK)
+            if (ModelState.IsValid)
             {
-                return RedirectToAction("Index", "People");
+                var response = await _userService.EditUser(uvm);
+                if (response.StatusCode == Domain.Enum.StatusCode.OK)
+                {
+                    return RedirectToAction("Index", "People");
+                }
+                return View("~/Views/Shared/Error.cshtml", response.Description);
             }
-            return View("~/Views/Shared/Error.cshtml", response.Description);
+            return View("~/Views/Shared/Error.cshtml", "Неккоректные данные");
         }
 
         public async Task<IActionResult> Activate(string code)
@@ -40,7 +44,7 @@ namespace MVC_CongratulationApplication.Controllers
             var response = await _userService.DeleteActivationCode();
             if (response.StatusCode == Domain.Enum.StatusCode.OK)
             {
-                return RedirectToAction("Index", "People");
+                return View();
             }
             return View("~/Views/Shared/Error.cshtml", response.Description);
         }

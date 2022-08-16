@@ -5,7 +5,7 @@
 }
 
 <div class="mt">
-    <form class="form" asp-action="Edit" asp-controller="People" method="post" enctype="multipart/form-data">
+    <form class="form" asp-action="Edit" asp-controller="People" method="post" asp-route-id="@Model.Id" enctype="multipart/form-data">
         <div class="form_group center">
             @if(Model.Filename != null){
                 <img class="avatar user_avatar" id="avatarHover" src="~/uploads/@Model.Filename" onclick='files.click()' alt="">

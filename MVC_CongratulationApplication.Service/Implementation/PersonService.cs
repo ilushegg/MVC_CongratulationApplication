@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using MVC_CongratulationApplication.DAL.Interface;
 using MVC_CongratulationApplication.Domain.Entity;
 using MVC_CongratulationApplication.Domain.Enum;
@@ -15,7 +14,7 @@ namespace MVC_CongratulationApplication.Service.Implementation
         private readonly IWebHostEnvironment _webHostEnvironment;
 
 
-        public PersonService(IPersonRepository personRepository, IWebHostEnvironment webHostEnvironment, IUserService userService)
+        public PersonService(IPersonRepository personRepository, IWebHostEnvironment webHostEnvironment)
         {
             _personRepository = personRepository;
             _webHostEnvironment = webHostEnvironment;
@@ -97,33 +96,7 @@ namespace MVC_CongratulationApplication.Service.Implementation
             }
         }
 
-        public async Task<IBaseResponse<Person>> GetPersonByName(string name)
-        {
-            var baseResponse = new BaseResponse<Person>();
-            try
-            {
-                var person = await _personRepository.GetByName(name);
-                if (person == null)
-                {
-                    baseResponse.Description = "Пользователь не найден";
-                    baseResponse.StatusCode = StatusCode.UserNotFound;
-                    return baseResponse;
-                }
-                baseResponse.Data = person;
-                baseResponse.StatusCode = StatusCode.OK;
-                return baseResponse;
-            }
-            catch (Exception ex)
-            {
-                return new BaseResponse<Person>()
-                {
-                    Description = $"[GetPersonByName] : {ex.Message}",
-                    StatusCode = StatusCode.InternalServerError
-                };
-            }
-        }
-
-        public async Task<IBaseResponse<PersonViewModel>> CreatePerson(PersonViewModel model, IFormFile file)
+        public async Task<IBaseResponse<PersonViewModel>> CreatePerson(PersonViewModel model)
         {
             var baseResponse = new BaseResponse<PersonViewModel>();
             try
@@ -133,14 +106,14 @@ namespace MVC_CongratulationApplication.Service.Implementation
                     Name = model.Name,
                     Birthday = model.Birthday
                 };
-                if (file != null)
+                if (model.File != null)
                 {
-                    var uniqueFileName = GetUniqueFileName(file.FileName);
+                    var uniqueFileName = GetUniqueFileName(model.File.FileName);
                     var uploads = Path.Combine(_webHostEnvironment.WebRootPath, "uploads");
                     var filePath = Path.Combine(uploads, uniqueFileName);
 
                     var fStream = new FileStream(filePath, FileMode.Create);
-                    file.CopyTo(fStream);
+                    model.File.CopyTo(fStream);
                     fStream.Dispose();
                     person.Filename = uniqueFileName;
                 }
@@ -161,19 +134,19 @@ namespace MVC_CongratulationApplication.Service.Implementation
             }
         }
 
-        public async Task<IBaseResponse<PersonViewModel>> EditPerson(int id, PersonViewModel model, IFormFile file)
+        public async Task<IBaseResponse<PersonViewModel>> EditPerson(int id, PersonViewModel model)
         {
             var baseResponse = new BaseResponse<PersonViewModel>();
             try
             {
                 var person = await _personRepository.Get(id);
-                if (file != null)
+                if (model.File != null)
                 {
-                    var uniqueFileName = GetUniqueFileName(file.FileName);
+                    var uniqueFileName = GetUniqueFileName(model.File.FileName);
                     var uploads = Path.Combine(_webHostEnvironment.WebRootPath, "uploads");
                     var filePath = Path.Combine(uploads, uniqueFileName);
                     var fStream = new FileStream(filePath, FileMode.Create);
-                    file.CopyTo(fStream);
+                    model.File.CopyTo(fStream);
                     fStream.Dispose();
 
                     person.Filename = uniqueFileName;
@@ -238,9 +211,5 @@ namespace MVC_CongratulationApplication.Service.Implementation
                       + Guid.NewGuid().ToString().Substring(0, 4)
                       + Path.GetExtension(fileName);
         }
-
-
-
-
     }
 }

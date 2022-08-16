@@ -21,33 +21,6 @@ namespace MVC_CongratulationApplication.Service.Implementation
             _configuration = configuration;
         }
 
-
-        public async Task<IBaseResponse<User>> GetUser(int id)
-        {
-            var baseResponse = new BaseResponse<User>();
-            try
-            {
-                var user = await _userRepository.Get(id);
-                if (user == null)
-                {
-                    baseResponse.Description = "Пользователь не найден";
-                    baseResponse.StatusCode = StatusCode.UserNotFound;
-                    return baseResponse;
-                }
-                baseResponse.Data = user;
-                baseResponse.StatusCode = StatusCode.OK;
-                return baseResponse;
-            }
-            catch (Exception ex)
-            {
-                return new BaseResponse<User>()
-                {
-                    Description = $"[GetPerson] : {ex.Message}",
-                    StatusCode = StatusCode.InternalServerError
-                };
-            }
-        }
-
         public async Task<IBaseResponse<User>> GetUser()
         {
             var baseResponse = new BaseResponse<User>();
@@ -73,8 +46,6 @@ namespace MVC_CongratulationApplication.Service.Implementation
                 };
             }
         }
-
-
 
         public async Task<IBaseResponse<UserViewModel>> CreateUser(UserViewModel model)
         {
@@ -205,7 +176,7 @@ namespace MVC_CongratulationApplication.Service.Implementation
             String message = String.Format(
                 "Привет, {0}!\n" +
                         "Добро пожаловать в приложение, где Вы никогда не забудете о днях рождениях своих знакомых, друзей, товарищей!\n" +
-                        "Пожалуйста, подтвердите свой электронный адрес перейдя по ссылке: {0}",
+                        "Пожалуйста, подтвердите свой электронный адрес перейдя по ссылке: {1}",
                 user.Name, link
             );
             _timedHostedService.Initialize(user.Email, message, "Активация");

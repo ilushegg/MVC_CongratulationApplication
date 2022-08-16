@@ -2,10 +2,10 @@
 
 @{
     ViewData["Title"] = "Настройки";
-    string name = "";
+    string? name = "";
     string email = "";
     string sendingTime = "";
-    string activationCode = "";
+    string activationCode = null;
     bool isAllowSending = true;
 
     if(Model != null)
@@ -19,7 +19,7 @@
 }
 
 <div class="mt">
-    @if (activationCode != "")
+    @if (activationCode != null)
     {
         <form asp-controller="Users" asp-action="SendCode" method="post">
             <div>Ваш адрес электронной почты не подтвержден!</div>

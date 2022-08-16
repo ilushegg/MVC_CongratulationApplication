@@ -9,7 +9,7 @@ namespace MVC_CongratulationApplication.Domain.Entity
         [StringLength(40, MinimumLength = 3, ErrorMessage = "Имя должно быть не менее 3 и не более 40 символов")]
         public string Name { get; set; }
         [Required(ErrorMessage = "Заполните дату рождения")]
-        [RegularExpression(@"\d\d\d\d-\d\d-\d\d", ErrorMessage = "Некорректная дата")]
+        [RegularExpression(@"((19|20)\d\d)-\d\d-\d\d", ErrorMessage = "Некорректная дата")]
         public DateTime Birthday { get; set; }
         public string? Filename { get; set; }
         public int? UserId { get; set; }

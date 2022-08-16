@@ -6,8 +6,6 @@ namespace MVC_CongratulationApplication.DAL.Interface
     {
         Task<bool> Edit(Person entity);
 
-        Task<Person> GetByName(string name);
-
         Task<List<Person>> GetBirthdayPeople();
     }
 }

@@ -13,11 +13,9 @@ namespace MVC_CongratulationApplication.Service.Interface
 
         Task<IBaseResponse<Person>> GetPerson(int id);
 
-        Task<IBaseResponse<Person>> GetPersonByName(string name);
+        Task<IBaseResponse<PersonViewModel>> CreatePerson(PersonViewModel model);
 
-        Task<IBaseResponse<PersonViewModel>> CreatePerson(PersonViewModel model, IFormFile file);
-
-        Task<IBaseResponse<PersonViewModel>> EditPerson(int id, PersonViewModel model, IFormFile file);
+        Task<IBaseResponse<PersonViewModel>> EditPerson(int id, PersonViewModel model);
 
         Task<IBaseResponse<bool>> DeletePerson(int id);
 
